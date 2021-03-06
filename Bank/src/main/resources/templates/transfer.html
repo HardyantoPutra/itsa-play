@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer Your Miles</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+            crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+    <style>
+        .form-group{
+            text-align:center;
+            }
+    .jumbotron {
+           padding: 10px;
+                }
+    </style>
+
+</head>
+<body>
+    <div th:insert="fragments/header :: header"></div>
+    <div class="container-fluid justify-content-md-center">
+        <div class="card text-center">
+            <div class="card-header">
+                Featured
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Transfer Your Miles</h5>
+                <p class="card-text">Transfer your miles to Asia Miles Account</p>
+                <div class="container">
+                    <div class="row justify-content-sm-center">
+                        <div class="col-sm-8">
+                            <div class="jumbotron">
+                                <div class="container">
+                                    <p style="margin:unset;" class="lead">50000 - 50000 = 0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="row justify-content-sm-center">
+                        <div class="col-sm-6">
+
+                            <form>
+                                <div class="form-group">
+                                    <label for="rewards" >Total Rewards to Transfer</label>
+                                    <input type="text" class="form-control" id="rewards"  placeholder="Rewards to transfer">
+
+                                </div>
+                                <button type="submit" onclick="transfer()" class="btn btn-primary">Complete Transfer</button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <div class="card-footer text-muted">
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

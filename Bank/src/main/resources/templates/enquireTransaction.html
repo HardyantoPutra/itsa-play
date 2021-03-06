@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Check Transaction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+            crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+
+    <style>
+        .form-group{
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="fragments/header :: header"></div>
+<div class="container-fluid justify-content-md-center">
+    <div class="card text-center">
+        <div class="card-header">
+            Transaction status
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Check Transaction status</h5>
+            <p class="card-text">Enter accrual to get status of transfer</p>
+            <p class="card-body">
+            <div class="container">
+                <div class="row justify-content-sm-center">
+                    <div class="col-sm-6">
+                        <div id="statusBox"></div>
+
+                            <div class="form-group">
+                                <label for="accrualNo" >Accrual #</label>
+                                <input type="text" class="form-control" id="accrualNo"  placeholder="Enter Accrual #">
+                            </div>
+                            <button onclick="checkStatus()" class="btn btn-primary">Check for status</button>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            </p>
+
+        </div>
+        <div class="card-footer text-muted">
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+     
+    //  async function getData(serviceURL){
+    //     let requestParam= {
+    //         header:{"content-type":"charset=UFT-8"},
+    //         mode: 'cors',
+    //         method: 'GET',
+    //     }
+
+    //     try{
+    //         const response = await fetch(serviceURL, requestParam);
+
+    //         if(response.status>=200 && response.status<300){
+    //             data = await response.json();
+    //            let result = data.status;
+           
+    //             if(result != "Success"){
+    //         var outcome = { "0001":"member not found",
+    //                         "0002":"member name mismatched",
+    //                         "0003":"member account closed",
+    //                         "0004":"member account suspended",
+    //                         "0005":"member ineligible for accrual",
+    //                         "0099":"member unable to process, please contact support for more information"}
+
+    //       statusBox.innerHTML = '<p>Status of Request : '+ result+'</p><p>Reason : '+outcome[data.outcomeCode]+'</p>';
+    //     }
+            
+    //         }
+
+    //     }catch(error){
+    //         console.log(error)
+    //     }
+
+    // }
+
+    function makeRequest(url,method,values) {
+            return new Promise(function (resolve, reject) {
+
+                let request = new XMLHttpRequest();
+
+                request.open(method, url);
+                request.onload = function () {
+                    if (this.status >= 200 && this.status < 300) {
+                        resolve(request.response);
+                    } else {
+                        reject({
+                            status: this.status,
+                            statusText: request.statusText
+                        });
+                    }
+                };
+                request.onerror = function () {
+                    reject({
+                        status: this.status,
+                        statusText: request.statusText
+                    });
+                };
+
+                request.send(values);
+            });
+        }
+
+        async function check(refNo){
+            let result = await makeRequest("http://localhost:8092/transaction?referenceNo="+refNo, "GET","");
+            var transaction = JSON.parse(result);
+            console.log(transaction.status);
+
+            if(transaction.status != "Success"){
+            var outcome = { "0001":"member not found",
+                            "0002":"member name mismatched",
+                            "0003":"member account closed",
+                            "0004":"member account suspended",
+                            "0005":"member ineligible for accrual",
+                            "0099":"member unable to process, please contact support for more information"}
+
+          statusBox.innerHTML = '<p>Status of Request : '+ transaction.status+'</p><p>Reason : '+outcome[transaction.outcomeCode]+'</p>';
+        }else{
+            statusBox.innerHTML = '<p>Status of Request : '+ transaction.status;
+        }
+            
+           
+        }
+
+
+    function checkStatus(){
+       
+        var refNo = document.getElementById('accrualNo').value;
+        var statusBox = document.getElementById('statusBox');
+        check(refNo);
+       
+        
+
+
+    }
+
+</script>
+
+</body>
+</html>

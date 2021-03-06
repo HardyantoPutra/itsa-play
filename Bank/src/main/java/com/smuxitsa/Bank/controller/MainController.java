@@ -21,4 +21,16 @@ public class MainController {
         return "validateMembership";
     }
 
+    @GetMapping("/transfer")
+    public String transferPoints(){
+
+        return "transfer";
+    }
+
+    @GetMapping("/enquireTransaction")
+    public String checkstatus(){
+
+        return "enquireTransaction";
+    }
+
 }
