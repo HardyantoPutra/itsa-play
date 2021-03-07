@@ -33,4 +33,10 @@ public class MainController {
         return "enquireTransaction";
     }
 
+    @GetMapping("/login")
+    public String login(){
+
+        return "login";
+    }
+
 }

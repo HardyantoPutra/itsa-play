@@ -31,45 +31,58 @@
 <div th:insert="fragments/header :: header"></div>
 
 <div class="container-fluid justify-content-md-center">
-    <h6 class="display-4 " id="groups" style="font-size:7vw;font-weight:300;"></h6>
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="programList"></div>
+
 </div>
 </div>
 
 <script>
-    alert(sessionStorage.getItem("userId"));
+    var userId = sessionStorage.getItem("userId");
+    
+    function makeRequest(url,method,values) {
+            return new Promise(function (resolve, reject) {
 
-    async function getData(serviceURL){
-        let requestParam= {
-            header:{"content-type":"charset=UFT-8"},
-            mode: 'cors',
-            method: 'GET',
+                let request = new XMLHttpRequest();
+
+                request.open(method, url);
+                request.onload = function () {
+                    if (this.status >= 200 && this.status < 300) {
+                        resolve(request.response);
+                    } else {
+                        reject({
+                            status: this.status,
+                            statusText: request.statusText
+                        });
+                    }
+                };
+                request.onerror = function () {
+                    reject({
+                        status: this.status,
+                        statusText: request.statusText
+                    });
+                };
+
+                request.send(values);
+            });
         }
 
-        try{
-            const response = await fetch(serviceURL, requestParam);
-            data = await response.json();
+        async function check(){
+            let result = await makeRequest("http://localhost:8094/programs", "GET","");
+            var programs = JSON.parse(result);
+            for(const program of programs){
+               var html = '<div class="row"><div class="col"><div class="card"><div class="card-body">'
+                html+= '<h5 class="card-title">'+program.programName+'</h5>'
+                html+= '<p class="card-text">Description:'+program.programDescription+"</p>"
+                html+='<p>'+program.currencyName+': 1000 ITSA Points = '+ program.currencyRate+"</p>"
+                html+= '<a href="validateMembership?partnerCode='+ program.partnerCode+'&programId='+program.programId+'"class="btn btn-primary">Transfer miles</a>'
+                html+='</div></div></div></div>'
+                $('#programList').append(html);
+            }
+           
+            
+        };
 
-        }catch(error){
-            console.error(error);
-        }
-
-    }
-
-
-        //var serviceURL = 'http://localhost:8090/users';
-        getData(serviceURL);
-
+        check()
 </script>
 </body>
 </html>

@@ -44,10 +44,10 @@
                 <div class="container">
                     <div class="row justify-content-md-center">
                         <div class="col-md-6">
-                            <form  >
+                            
                                 <div class="form-group">
                                     <label for="name" >Primary CardHolder</label>
-                                    <input type="text" class="form-control" id="name" value="<USERNAME>" disabled>
+                                    <input type="text" class="form-control" id="name" value="Amanda Choo" disabled>
 
                                 </div>
                                 <div class="form-group">
@@ -61,7 +61,7 @@
                                 </div>
 
                                 <button onclick="validate()" class="btn btn-primary">Continue</button>
-                            </form>
+                            
 
                         </div>
                     </div>
@@ -78,37 +78,60 @@
 </div>
 
 <script>
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    var programId = urlParams.get('programId')
+   
+    // sessionStorage.setItem('partnerCode',partnerCode)
     var isValidMembership = null;
     var membershipId = document.getElementById('membershipNo');
+   var userId = sessionStorage.getItem("userId");
 
-     async function getData(serviceURL){
-        let requestParam= {
-            header:{"content-type":"charset=UFT-8"},
-            mode: 'cors',
-            method: 'GET',
+    function makeRequest(url,method,values) {
+            return new Promise(function (resolve, reject) {
+
+                let request = new XMLHttpRequest();
+
+                request.open(method, url);
+                request.onload = function () {
+                    if (this.status >= 200 && this.status < 300) {
+                        resolve(request.response);
+                    } else {
+                        reject({
+                            status: this.status,
+                            statusText: request.statusText
+                        });
+                    }
+                };
+                request.onerror = function () {
+                    reject({
+                        status: this.status,
+                        statusText: request.statusText
+                    });
+                };
+
+                request.send(values);
+            });
         }
 
-        try{
-            const response = await fetch(serviceURL, requestParam);
+    async function validate(){
+            console.log(programId)
+            let programResult = await makeRequest('http://localhost:8094/programs/'+programId, "GET","");
+            var program = JSON.parse(programResult)
+            
 
-            if(response.status>=200 && response.status<300){
-                data = await response.json();
-                isValidMembership = response;
-                console.log(isValidMembership);
+            let result = await makeRequest('http://localhost:8091/membership?id='+ membershipId.value+'&userId='+userId+'&partnerCode='+program.partnerCode, "GET","");
+            var membership = JSON.parse(result);
+            if(membership.result=="Valid Membership"){
+                window.location.href = "http://localhost:8080/transfer";
+                sessionStorage.setItem('programId',program.programId);
+                sessionStorage.setItem('membershipId',membershipId.value)
+            }else{
+                alert("Invalid Membership")
             }
-
-        }catch(error){
-            console.log(error)
-        }
-
-    }
-
-    var userId = 1;
-    function validate(){
-        var serviceURL = 'http://localhost:8091/membership?id='+ membershipId.value+'&userId='+userId;
-        getData(serviceURL);
-        sessionStorage.setItem("userId","1");
-    }
+           
+            
+        };
 
 </script>
 

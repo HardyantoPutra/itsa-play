@@ -44,7 +44,7 @@
             </div>
             <div class="card-body">
                 <h5 class="card-title">Transfer Your Miles</h5>
-                <p class="card-text">Transfer your miles to Asia Miles Account</p>
+                <p class="card-text" id="account">Transfer your miles to your Account</p>
                 <div class="container">
                     <div class="row justify-content-sm-center">
                         <div class="col-sm-8">
@@ -64,8 +64,8 @@
                             <form>
                                 <div class="form-group">
                                     <label for="rewards" >Total Rewards to Transfer</label>
-                                    <input type="text" class="form-control" id="rewards"  placeholder="Rewards to transfer">
-
+                                    <input type="text" class="form-control" id="rewards"  placeholder="Rewards to transfer" onfocusout = 'calculate()'>
+                                    <div id ="miles"></div>
                                 </div>
                                 <button type="submit" onclick="transfer()" class="btn btn-primary">Complete Transfer</button>
                             </form>
@@ -84,5 +84,81 @@
         </div>
     </div>
 
+    <script>
+       
+        var programId = sessionStorage.getItem('programId')
+        var membershipId = sessionStorage.getItem('membershipId')
+
+        
+        function makeRequest(url,method,values) {
+            return new Promise(function (resolve, reject) {
+
+                let request = new XMLHttpRequest();
+
+                request.open(method, url);
+                request.onload = function () {
+                    if (this.status >= 200 && this.status < 300) {
+                        resolve(request.response);
+                    } else {
+                        reject({
+                            status: this.status,
+                            statusText: request.statusText
+                        });
+                    }
+                };
+                request.onerror = function () {
+                    reject({
+                        status: this.status,
+                        statusText: request.statusText
+                    });
+                };
+
+                request.send(values);
+            });
+        }
+
+        var account = document.getElementById('account')
+        var rewards = document.getElementById('rewards').value
+        var miles = document.getElementById('miles')
+        var currency = "";
+        var exchange = 0 ;
+        async function getProgramInfo(){
+         
+            let result = await makeRequest('http://localhost:8094/programs/'+ programId, "GET","");
+            var program = JSON.parse(result);
+            account.innerText = 'Transfer your miles to your ' + program.programName + ' account :\n' + membershipId;
+            exchange = program.currencyRate; 
+            currency = program.currencyName;
+            if(rewards==0){
+                miles.innerHTML='<p>0'+program.currencyName+'</p>'
+            }
+
+         
+     };
+     var equal = 0 ;
+     function calculate(){
+        rewards = document.getElementById('rewards').value
+        if(rewards==0){
+                miles.innerHTML='<p> '+equal+' '+currency+'</p>'
+            }else{
+                equal = rewards/exchange
+                miles.innerHTML='<p> '+equal + " " + currency+'</p>'
+            }
+     }
+
+     getProgramInfo();
+
+     async function transfer(){
+         
+         let result = await makeRequest('http://localhost:8094/transfer/'+ programId, "GET","");
+         var program = JSON.parse(result);
+         account.innerText = 'Transfer your miles to your ' + program.programName + ' account :\n' + membershipId;
+         exchange = program.currencyRate; 
+         currency = program.currencyName;
+         if(rewards==0){
+             miles.innerHTML='<p>0'+program.currencyName+'</p>'
+         }
+        }
+    </script>
 </body>
 </html>

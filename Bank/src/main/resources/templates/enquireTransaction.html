@@ -40,25 +40,25 @@
         <div class="card-body">
             <h5 class="card-title">Check Transaction status</h5>
             <p class="card-text">Enter accrual to get status of transfer</p>
-            <p class="card-body">
-            <div class="container">
-                <div class="row justify-content-sm-center">
-                    <div class="col-sm-6">
-                        <div id="statusBox"></div>
 
-                            <div class="form-group">
-                                <label for="accrualNo" >Accrual #</label>
-                                <input type="text" class="form-control" id="accrualNo"  placeholder="Enter Accrual #">
-                            </div>
-                            <button onclick="checkStatus()" class="btn btn-primary">Check for status</button>
+                <div class="container">
+                    <div class="row justify-content-sm-center">
+                        <div class="col-sm-6">
+                            <div id="statusBox"></div>
+
+                                <div class="form-group">
+                                    <label for="accrualNo" >Accrual #</label>
+                                    <input type="text" class="form-control" id="accrualNo"  placeholder="Enter Accrual #">
+                                </div>
+                                <button onclick="checkStatus()" class="btn btn-primary">Check for status</button>
 
 
+                        </div>
                     </div>
+
                 </div>
 
-            </div>
 
-            </p>
 
         </div>
         <div class="card-footer text-muted">
@@ -68,41 +68,6 @@
 </div>
 
 <script>
-
-
-     
-    //  async function getData(serviceURL){
-    //     let requestParam= {
-    //         header:{"content-type":"charset=UFT-8"},
-    //         mode: 'cors',
-    //         method: 'GET',
-    //     }
-
-    //     try{
-    //         const response = await fetch(serviceURL, requestParam);
-
-    //         if(response.status>=200 && response.status<300){
-    //             data = await response.json();
-    //            let result = data.status;
-           
-    //             if(result != "Success"){
-    //         var outcome = { "0001":"member not found",
-    //                         "0002":"member name mismatched",
-    //                         "0003":"member account closed",
-    //                         "0004":"member account suspended",
-    //                         "0005":"member ineligible for accrual",
-    //                         "0099":"member unable to process, please contact support for more information"}
-
-    //       statusBox.innerHTML = '<p>Status of Request : '+ result+'</p><p>Reason : '+outcome[data.outcomeCode]+'</p>';
-    //     }
-            
-    //         }
-
-    //     }catch(error){
-    //         console.log(error)
-    //     }
-
-    // }
 
     function makeRequest(url,method,values) {
             return new Promise(function (resolve, reject) {
